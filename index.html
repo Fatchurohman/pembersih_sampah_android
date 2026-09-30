@@ -1,1 +1,1087 @@
- <!DOCTYPE html> <html lang="id"> <head>   <meta charset="UTF-8" />   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>   <title>Cache Cleaner Pro</title>   <style>     /* ===== GOOGLE FONTS ===== */     @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap');      /* ===== ROOT VARIABLES ===== */     :root {       --gold-light:    #FFD700;       --gold-main:     #C9A84C;       --gold-deep:     #A67C00;       --gold-shine:    #FFF4A3;       --green-dark:    #0B3D2E;       --green-mid:     #145A3C;       --green-deep:    #0A2E1F;       --green-accent:  #1A7A50;       --green-glow:    #27AE60;       --bg-main:       #071C12;       --text-light:    #F5E6C8;       --shadow-gold:   0 0 18px rgba(201,168,76,0.55);       --shadow-green:  0 0 18px rgba(39,174,96,0.35);     }      /* ===== RESET & BASE ===== */     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }      body {       font-family: 'Rajdhani', sans-serif;       background: var(--bg-main);       min-height: 100vh;       display: flex;       flex-direction: column;       align-items: center;       overflow-x: hidden;       position: relative;     }      /* ===== ANIMATED BACKGROUND ===== */     body::before {       content: '';       position: fixed;       inset: 0;       background:         radial-gradient(ellipse at 20% 20%, rgba(201,168,76,0.08) 0%, transparent 60%),         radial-gradient(ellipse at 80% 80%, rgba(20,90,60,0.18) 0%, transparent 60%),         radial-gradient(ellipse at 50% 50%, rgba(11,61,46,0.30) 0%, transparent 80%);       pointer-events: none;       z-index: 0;     }      /* Particle Stars */     .stars {       position: fixed;       inset: 0;       pointer-events: none;       z-index: 0;       overflow: hidden;     }     .star {       position: absolute;       border-radius: 50%;       background: var(--gold-light);       opacity: 0;       animation: twinkle var(--dur) var(--delay) infinite ease-in-out;     }     @keyframes twinkle {       0%, 100% { opacity: 0; transform: scale(0.5); }       50%       { opacity: 0.7; transform: scale(1.2); }     }      /* ===== WRAPPER ===== */     .wrapper {       width: 100%;       max-width: 480px;       display: flex;       flex-direction: column;       align-items: center;       padding: 0 0 32px 0;       position: relative;       z-index: 1;     }      /* ===== HEADER ===== */     header {       width: 100%;       background: linear-gradient(180deg, #0A2E1F 0%, #0D3D28 60%, #0B3D2E 100%);       border-bottom: 2.5px solid var(--gold-main);       box-shadow: 0 4px 32px rgba(201,168,76,0.18), 0 2px 8px rgba(0,0,0,0.7);       padding: 22px 18px 14px;       display: flex;       flex-direction: column;       align-items: center;       position: relative;       overflow: hidden;     }      header::before {       content: '';       position: absolute;       top: 0; left: 0; right: 0;       height: 3px;       background: linear-gradient(90deg, transparent, var(--gold-shine), var(--gold-light), var(--gold-main), transparent);       animation: shimmer-line 3s linear infinite;     }     @keyframes shimmer-line {       0%   { transform: translateX(-100%); }       100% { transform: translateX(100%); }     }      /* Corner Ornament */     header::after {       content: '✦';       position: absolute;       bottom: 10px; right: 16px;       color: var(--gold-deep);       font-size: 18px;       opacity: 0.5;     }      .app-icon-wrap {       position: relative;       margin-bottom: 8px;     }     .app-icon {       width: 72px; height: 72px;       border-radius: 50%;       background: radial-gradient(circle at 35% 35%, #1A7A50, #0A2E1F);       border: 3px solid var(--gold-main);       box-shadow: var(--shadow-gold), inset 0 0 18px rgba(201,168,76,0.12);       display: flex;       align-items: center;       justify-content: center;       font-size: 32px;       animation: pulse-icon 3s ease-in-out infinite;       position: relative;     }     @keyframes pulse-icon {       0%, 100% { box-shadow: var(--shadow-gold), inset 0 0 18px rgba(201,168,76,0.12); }       50%       { box-shadow: 0 0 32px rgba(201,168,76,0.75), inset 0 0 24px rgba(201,168,76,0.20); }     }      /* Rotating ring around icon */     .ring {       position: absolute;       inset: -8px;       border-radius: 50%;       border: 2px dashed rgba(201,168,76,0.35);       animation: spin-ring 10s linear infinite;     }     @keyframes spin-ring {       from { transform: rotate(0deg); }       to   { transform: rotate(360deg); }     }      .app-title {       font-family: 'Cinzel Decorative', cursive;       font-size: 20px;       font-weight: 900;       color: var(--gold-light);       text-shadow: 0 0 12px rgba(255,215,0,0.7), 0 2px 4px rgba(0,0,0,0.8);       letter-spacing: 1.5px;       text-align: center;       line-height: 1.25;     }     .app-subtitle {       font-family: 'Orbitron', sans-serif;       font-size: 10px;       color: var(--gold-deep);       letter-spacing: 3px;       margin-top: 3px;       text-transform: uppercase;       opacity: 0.85;     }      /* ===== DEVELOPER BADGE ===== */     .dev-badge {       display: flex;       align-items: center;       gap: 7px;       margin-top: 10px;       background: rgba(201,168,76,0.07);       border: 1px solid rgba(201,168,76,0.25);       border-radius: 20px;       padding: 5px 14px 5px 10px;     }     .blink-dot {       width: 9px; height: 9px;       border-radius: 50%;       background: var(--green-glow);       box-shadow: 0 0 6px var(--green-glow);       flex-shrink: 0;       animation: blink-dot 1.2s ease-in-out infinite;     }     @keyframes blink-dot {       0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--green-glow), 0 0 12px var(--green-glow); }       50%       { opacity: 0.1; box-shadow: none; }     }     .dev-text {       font-family: 'Orbitron', sans-serif;       font-size: 10px;       color: var(--gold-main);       letter-spacing: 1.5px;       font-weight: 700;     }     .dev-text span {       color: var(--gold-light);     }      /* ===== VISITOR COUNTER ===== */     .visitor-bar {       width: calc(100% - 32px);       margin: 16px auto 0;       background: linear-gradient(135deg, rgba(11,61,46,0.8), rgba(10,46,31,0.95));       border: 1px solid rgba(201,168,76,0.30);       border-radius: 12px;       padding: 10px 18px;       display: flex;       align-items: center;       justify-content: space-between;       box-shadow: var(--shadow-green);     }     .visitor-label {       font-size: 12px;       color: var(--gold-main);       letter-spacing: 1px;       font-weight: 600;     }     .visitor-label i { margin-right: 6px; }     .visitor-count {       font-family: 'Orbitron', sans-serif;       font-size: 18px;       font-weight: 900;       color: var(--gold-light);       text-shadow: 0 0 10px rgba(255,215,0,0.6);       letter-spacing: 2px;     }      /* ===== MAIN CONTENT ===== */     main {       width: calc(100% - 32px);       margin-top: 20px;       display: flex;       flex-direction: column;       gap: 16px;     }      /* ===== STORAGE GAUGE CARD ===== */     .card {       background: linear-gradient(145deg, rgba(20,90,60,0.45), rgba(11,61,46,0.70));       border: 1.5px solid rgba(201,168,76,0.30);       border-radius: 18px;       padding: 20px;       box-shadow: 0 4px 24px rgba(0,0,0,0.4), var(--shadow-green);       position: relative;       overflow: hidden;     }     .card::before {       content: '';       position: absolute;       top: -50%; left: -50%;       width: 200%; height: 200%;       background: radial-gradient(ellipse at center, rgba(201,168,76,0.04) 0%, transparent 70%);       pointer-events: none;     }      .card-title {       font-family: 'Orbitron', sans-serif;       font-size: 11px;       letter-spacing: 2.5px;       color: var(--gold-main);       text-transform: uppercase;       margin-bottom: 14px;       display: flex;       align-items: center;       gap: 8px;     }     .card-title::before {       content: '';       display: inline-block;       width: 18px; height: 2px;       background: var(--gold-main);     }      /* Storage Info Grid */     .storage-grid {       display: grid;       grid-template-columns: 1fr 1fr 1fr;       gap: 10px;       margin-bottom: 16px;     }     .storage-item {       background: rgba(10,46,31,0.6);       border: 1px solid rgba(201,168,76,0.18);       border-radius: 12px;       padding: 12px 8px;       text-align: center;     }     .storage-emoji { font-size: 22px; margin-bottom: 4px; }     .storage-val {       font-family: 'Orbitron', sans-serif;       font-size: 14px;       font-weight: 700;       color: var(--gold-light);     }     .storage-lbl {       font-size: 9px;       color: var(--gold-deep);       letter-spacing: 1px;       margin-top: 2px;       text-transform: uppercase;     }      /* Progress Bar */     .progress-wrap {       margin-top: 4px;     }     .progress-label-row {       display: flex;       justify-content: space-between;       font-size: 11px;       color: var(--gold-main);       margin-bottom: 6px;     }     .progress-bar-bg {       width: 100%;       height: 10px;       background: rgba(10,46,31,0.8);       border-radius: 10px;       border: 1px solid rgba(201,168,76,0.15);       overflow: hidden;     }     .progress-bar-fill {       height: 100%;       border-radius: 10px;       background: linear-gradient(90deg, var(--green-accent), var(--gold-deep), var(--gold-main));       box-shadow: 0 0 8px rgba(201,168,76,0.4);       transition: width 1.5s cubic-bezier(0.4,0,0.2,1);       width: 0%;     }      /* ===== CACHE LIST CARD ===== */     .cache-list { display: flex; flex-direction: column; gap: 10px; }      .cache-item {       background: rgba(10,46,31,0.55);       border: 1px solid rgba(201,168,76,0.18);       border-radius: 14px;       padding: 12px 16px;       display: flex;       align-items: center;       gap: 12px;       transition: all 0.4s ease;     }     .cache-item.cleaned {       border-color: var(--green-glow);       background: rgba(39,174,96,0.08);     }     .cache-item-icon {       width: 40px; height: 40px;       border-radius: 10px;       display: flex; align-items: center; justify-content: center;       font-size: 20px;       background: rgba(11,61,46,0.8);       border: 1px solid rgba(201,168,76,0.20);       flex-shrink: 0;     }     .cache-item-info { flex: 1; }     .cache-item-name {       font-size: 13px;       font-weight: 700;       color: var(--text-light);       margin-bottom: 2px;     }     .cache-item-size {       font-family: 'Orbitron', sans-serif;       font-size: 10px;       color: var(--gold-main);     }     .cache-item-status {       font-size: 18px;       min-width: 24px;       text-align: center;       transition: all 0.4s ease;     }      /* ===== CLEAN BUTTON ===== */     .btn-wrap {       display: flex;       flex-direction: column;       align-items: center;       gap: 12px;       margin-top: 4px;     }      .btn-clean {       width: 100%;       padding: 18px 24px;       border: none;       border-radius: 18px;       cursor: pointer;       font-family: 'Cinzel Decorative', cursive;       font-size: 16px;       font-weight: 700;       letter-spacing: 1.5px;       color: var(--green-deep);       background: linear-gradient(135deg, var(--gold-shine) 0%, var(--gold-light) 30%, var(--gold-main) 70%, var(--gold-deep) 100%);       box-shadow: 0 6px 28px rgba(201,168,76,0.50), 0 2px 8px rgba(0,0,0,0.5);       position: relative;       overflow: hidden;       transition: all 0.3s ease;       -webkit-tap-highlight-color: transparent;     }     .btn-clean::before {       content: '';       position: absolute;       top: 0; left: -100%;       width: 100%; height: 100%;       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);       animation: btn-shimmer 2.5s linear infinite;     }     @keyframes btn-shimmer {       0%   { left: -100%; }       100% { left: 200%; }     }     .btn-clean:active {       transform: scale(0.97);       box-shadow: 0 3px 14px rgba(201,168,76,0.40);     }     .btn-clean:disabled {       cursor: not-allowed;       opacity: 0.7;     }     .btn-clean .btn-icon { margin-right: 8px; font-size: 18px; }      .btn-refresh {       background: transparent;       border: 1.5px solid rgba(201,168,76,0.40);       border-radius: 12px;       padding: 10px 24px;       color: var(--gold-main);       font-family: 'Rajdhani', sans-serif;       font-size: 13px;       font-weight: 600;       letter-spacing: 1.5px;       cursor: pointer;       transition: all 0.3s ease;       -webkit-tap-highlight-color: transparent;     }     .btn-refresh:active {       background: rgba(201,168,76,0.10);     }      /* ===== RESULT BOX ===== */     .result-box {       display: none;       background: linear-gradient(135deg, rgba(39,174,96,0.12), rgba(11,61,46,0.60));       border: 2px solid var(--green-glow);       border-radius: 18px;       padding: 22px;       text-align: center;       box-shadow: var(--shadow-green), 0 0 32px rgba(39,174,96,0.18);       animation: pop-in 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;     }     @keyframes pop-in {       0%   { opacity: 0; transform: scale(0.8); }       100% { opacity: 1; transform: scale(1); }     }     .result-checkmark {       font-size: 48px;       animation: bounce-check 0.6s 0.3s cubic-bezier(0.175,0.885,0.32,1.275) both;     }     @keyframes bounce-check {       0%   { transform: scale(0); }       100% { transform: scale(1); }     }     .result-title {       font-family: 'Cinzel Decorative', cursive;       font-size: 15px;       color: var(--gold-light);       text-shadow: 0 0 10px rgba(255,215,0,0.5);       margin: 8px 0 4px;     }     .result-desc {       font-size: 13px;       color: var(--green-glow);       font-weight: 600;       letter-spacing: 0.5px;     }     .result-freed {       font-family: 'Orbitron', sans-serif;       font-size: 22px;       font-weight: 900;       color: var(--gold-light);       text-shadow: 0 0 14px rgba(255,215,0,0.7);       margin-top: 10px;     }      /* ===== PROGRESS MODAL ===== */     .overlay {       display: none;       position: fixed;       inset: 0;       background: rgba(7,28,18,0.92);       z-index: 999;       align-items: center;       justify-content: center;       flex-direction: column;       gap: 20px;     }     .overlay.active { display: flex; }      .clean-spinner {       width: 110px; height: 110px;       border-radius: 50%;       border: 4px solid rgba(201,168,76,0.15);       border-top: 4px solid var(--gold-light);       border-right: 4px solid var(--gold-main);       animation: spin 0.9s linear infinite;       position: relative;       display: flex; align-items: center; justify-content: center;     }     .clean-spinner::before {       content: '🧹';       font-size: 36px;       animation: counter-spin 0.9s linear infinite;     }     @keyframes spin         { from { transform: rotate(0deg); }   to { transform: rotate(360deg); }  }     @keyframes counter-spin { from { transform: rotate(0deg); }   to { transform: rotate(-360deg); } }      .clean-progress-text {       font-family: 'Orbitron', sans-serif;       font-size: 14px;       color: var(--gold-light);       text-align: center;       min-height: 20px;     }     .clean-percent {       font-family: 'Orbitron', sans-serif;       font-size: 36px;       font-weight: 900;       color: var(--gold-light);       text-shadow: 0 0 20px rgba(255,215,0,0.7);     }     .clean-progress-bar-bg {       width: 220px;       height: 8px;       background: rgba(201,168,76,0.15);       border-radius: 8px;       overflow: hidden;     }     .clean-progress-bar-fill {       height: 100%;       border-radius: 8px;       background: linear-gradient(90deg, var(--green-accent), var(--gold-light));       box-shadow: 0 0 10px rgba(255,215,0,0.5);       width: 0%;       transition: width 0.3s ease;     }      /* ===== TIPS CARD ===== */     .tips-card {       background: linear-gradient(135deg, rgba(166,124,0,0.08), rgba(11,61,46,0.50));       border: 1px solid rgba(201,168,76,0.20);       border-radius: 14px;       padding: 14px 16px;     }     .tips-title {       font-family: 'Orbitron', sans-serif;       font-size: 10px;       letter-spacing: 2px;       color: var(--gold-main);       margin-bottom: 8px;     }     .tip-row {       display: flex; align-items: flex-start;       gap: 8px; margin-bottom: 6px;       font-size: 12px; color: rgba(245,230,200,0.75);       line-height: 1.4;     }     .tip-row:last-child { margin-bottom: 0; }      /* ===== FOOTER ===== */     footer {       width: 100%;       margin-top: 24px;       padding: 16px;       background: linear-gradient(180deg, transparent, rgba(10,46,31,0.6));       border-top: 1px solid rgba(201,168,76,0.18);       text-align: center;     }     .footer-divider {       display: flex; align-items: center; gap: 10px;       margin-bottom: 10px;     }     .footer-divider::before,     .footer-divider::after {       content: '';       flex: 1;       height: 1px;       background: linear-gradient(90deg, transparent, rgba(201,168,76,0.30), transparent);     }     .footer-ornament { color: var(--gold-deep); font-size: 14px; opacity: 0.7; }      .footer-text {       font-size: 11px;       color: var(--gold-deep);       letter-spacing: 1px;       line-height: 1.6;     }     .footer-text span {       color: var(--gold-main);       font-weight: 700;     }     .heart {       color: #E74C3C;       animation: heartbeat 1.4s ease-in-out infinite;       display: inline-block;     }     @keyframes heartbeat {       0%, 100% { transform: scale(1); }       14%       { transform: scale(1.3); }       28%       { transform: scale(1); }       42%       { transform: scale(1.2); }       56%       { transform: scale(1); }     }      /* ===== TOAST NOTIFICATION ===== */     .toast {       position: fixed;       bottom: 24px;       left: 50%; transform: translateX(-50%) translateY(80px);       background: linear-gradient(135deg, var(--green-mid), var(--green-dark));       border: 1.5px solid var(--gold-main);       border-radius: 14px;       padding: 12px 22px;       font-size: 13px;       color: var(--gold-light);       font-weight: 600;       letter-spacing: 0.5px;       box-shadow: var(--shadow-gold);       z-index: 9999;       transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275), opacity 0.4s;       opacity: 0;       white-space: nowrap;     }     .toast.show {       transform: translateX(-50%) translateY(0);       opacity: 1;     }      /* ===== RESPONSIVE ===== */     @media (max-width: 360px) {       .app-title { font-size: 16px; }       .storage-grid { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }       .btn-clean { font-size: 13px; }     }   </style> </head> <body>  <!-- Particle Stars --> <div class="stars" id="starsContainer"></div>  <!-- Clean Overlay / Loading Modal --> <div class="overlay" id="overlay">   <div class="clean-percent" id="percentText">0%</div>   <div class="clean-spinner"></div>   <div class="clean-progress-bar-bg">     <div class="clean-progress-bar-fill" id="cleanProgressFill"></div>   </div>   <div class="clean-progress-text" id="cleanProgressText">Memulai pembersihan...</div> </div>  <!-- Toast --> <div class="toast" id="toast"></div>  <div class="wrapper">    <!-- ===== HEADER ===== -->   <header>     <div class="app-icon-wrap">       <div class="app-icon">🛡️<div class="ring"></div></div>     </div>     <div class="app-title">Cache Cleaner Pro</div>     <div class="app-subtitle">✦ Ultimate Memory Booster ✦</div>      <!-- Developer Badge -->     <div class="dev-badge">       <div class="blink-dot"></div>       <div class="dev-text">Developer : <span>Fatur 62</span></div>     </div>   </header>    <!-- ===== VISITOR COUNTER ===== -->   <div class="visitor-bar">     <div class="visitor-label">👥 Total Pengunjung</div>     <div class="visitor-count" id="visitorCount">000000</div>   </div>    <!-- ===== MAIN CONTENT ===== -->   <main>      <!-- Storage Card -->     <div class="card">       <div class="card-title">📊 Status Memori</div>       <div class="storage-grid">         <div class="storage-item">           <div class="storage-emoji">💾</div>           <div class="storage-val" id="totalStorage">--</div>           <div class="storage-lbl">Total RAM</div>         </div>         <div class="storage-item">           <div class="storage-emoji">🗑️</div>           <div class="storage-val" id="cacheStorage">--</div>           <div class="storage-lbl">Cache</div>         </div>         <div class="storage-item">           <div class="storage-emoji">✅</div>           <div class="storage-val" id="freeStorage">--</div>           <div class="storage-lbl">Bebas</div>         </div>       </div>       <div class="progress-wrap">         <div class="progress-label-row">           <span>Penggunaan RAM</span>           <span id="progressPercent">Menganalisa...</span>         </div>         <div class="progress-bar-bg">           <div class="progress-bar-fill" id="progressFill"></div>         </div>       </div>     </div>      <!-- Cache Items Card -->     <div class="card">       <div class="card-title">🗂️ Jenis Cache Terdeteksi</div>       <div class="cache-list" id="cacheList">         <div class="cache-item" data-id="app">           <div class="cache-item-icon">📱</div>           <div class="cache-item-info">             <div class="cache-item-name">Cache Aplikasi</div>             <div class="cache-item-size" id="size-app">Menganalisa...</div>           </div>           <div class="cache-item-status" id="status-app">⏳</div>         </div>         <div class="cache-item" data-id="browser">           <div class="cache-item-icon">🌐</div>           <div class="cache-item-info">             <div class="cache-item-name">Cache Browser</div>             <div class="cache-item-size" id="size-browser">Menganalisa...</div>           </div>           <div class="cache-item-status" id="status-browser">⏳</div>         </div>         <div class="cache-item" data-id="temp">           <div class="cache-item-icon">📂</div>           <div class="cache-item-info">             <div class="cache-item-name">File Sementara</div>             <div class="cache-item-size" id="size-temp">Menganalisa...</div>           </div>           <div class="cache-item-status" id="status-temp">⏳</div>         </div>         <div class="cache-item" data-id="thumbnail">           <div class="cache-item-icon">🖼️</div>           <div class="cache-item-info">             <div class="cache-item-name">Thumbnail Cache</div>             <div class="cache-item-size" id="size-thumbnail">Menganalisa...</div>           </div>           <div class="cache-item-status" id="status-thumbnail">⏳</div>         </div>         <div class="cache-item" data-id="system">           <div class="cache-item-icon">⚙️</div>           <div class="cache-item-info">             <div class="cache-item-name">Cache Sistem</div>             <div class="cache-item-size" id="size-system">Menganalisa...</div>           </div>           <div class="cache-item-status" id="status-system">⏳</div>         </div>         <div class="cache-item" data-id="residual">           <div class="cache-item-icon">🔋</div>           <div class="cache-item-info">             <div class="cache-item-name">Residual Files</div>             <div class="cache-item-size" id="size-residual">Menganalisa...</div>           </div>           <div class="cache-item-status" id="status-residual">⏳</div>         </div>       </div>     </div>      <!-- Action Buttons -->     <div class="btn-wrap">       <button class="btn-clean" id="btnClean" onclick="startCleaning()">         <span class="btn-icon">🚀</span> BERSIHKAN SEKARANG       </button>       <button class="btn-refresh" onclick="refreshScan()">🔄 Scan Ulang</button>     </div>      <!-- Result Box -->     <div class="result-box" id="resultBox">       <div class="result-checkmark">✅</div>       <div class="result-title">Pembersihan Selesai!</div>       <div class="result-desc">Memori berhasil dibersihkan 100%</div>       <div class="result-freed" id="freedText">+0 MB Dibebaskan</div>     </div>      <!-- Tips Card -->     <div class="tips-card">       <div class="tips-title">💡 TIPS PERAWATAN</div>       <div class="tip-row">✦ Bersihkan cache secara rutin setiap 3-7 hari sekali untuk performa optimal.</div>       <div class="tip-row">✦ Cache yang menumpuk dapat memperlambat performa hingga 40%.</div>       <div class="tip-row">✦ Setelah membersihkan cache, restart perangkat untuk hasil terbaik.</div>     </div>    </main>    <!-- ===== FOOTER ===== -->   <footer>     <div class="footer-divider">       <span class="footer-ornament">✦</span>     </div>     <div class="footer-text">       Aplikasi ini dibuat dengan <span class="heart">❤</span> by <span>Fatur62</span>     </div>     <div class="footer-text" style="margin-top:4px; font-size:9px; opacity:0.5;">       © 2024 Cache Cleaner Pro — All Rights Reserved     </div>   </footer>  </div>  <script>   // =============================================   //  STARS GENERATOR   // =============================================   (function generateStars() {     const container = document.getElementById('starsContainer');     for (let i = 0; i < 55; i++) {       const s = document.createElement('div');       s.className = 'star';       const size = Math.random() * 2.5 + 0.8;       s.style.cssText = `         width:${size}px; height:${size}px;         top:${Math.random()*100}%;         left:${Math.random()*100}%;         --dur:${(Math.random()*3+2).toFixed(1)}s;         --delay:${(Math.random()*5).toFixed(1)}s;       `;       container.appendChild(s);     }   })();    // =============================================   //  VISITOR COUNTER   // =============================================   (function initVisitor() {     let count = parseInt(localStorage.getItem('fc62_visitors') || '0', 10);     count++;     localStorage.setItem('fc62_visitors', count);     animateCounter(document.getElementById('visitorCount'), count);   })();    function animateCounter(el, target) {     const start = Math.max(0, target - Math.floor(Math.random() * 8 + 3));     let current = start;     const step = () => {       if (current < target) {         current++;         el.textContent = String(current).padStart(6, '0');         setTimeout(step, 60);       } else {         el.textContent = String(target).padStart(6, '0');       }     };     step();   }    // =============================================   //  CACHE SIZE DATA (Simulated)   // =============================================   const cacheTypes = ['app','browser','temp','thumbnail','system','residual'];   let cacheSizes = {};   let totalCacheSize = 0;    function generateRandomSizes() {     totalCacheSize = 0;     cacheSizes = {};     cacheTypes.forEach(type => {       const mb = parseFloat((Math.random() * 180 + 20).toFixed(1));       cacheSizes[type] = mb;       totalCacheSize += mb;     });     totalCacheSize = parseFloat(totalCacheSize.toFixed(1));   }    function displaySizes() {     cacheTypes.forEach(type => {       const el = document.getElementById('size-' + type);       if (el) el.textContent = cacheSizes[type] + ' MB';     });   }    // =============================================   //  STORAGE INFO   // =============================================   function updateStorageInfo(cleared) {     const total = (Math.random() * 2 + 2).toFixed(1);     const cacheGB = cleared ? 0 : parseFloat((totalCacheSize / 1024).toFixed(2));     const free = cleared       ? parseFloat(total).toFixed(1)       : parseFloat((total - cacheGB).toFixed(1));      document.getElementById('totalStorage').textContent = total + ' GB';     document.getElementById('cacheStorage').textContent = cleared ? '0 MB' : totalCacheSize.toFixed(0) + ' MB';     document.getElementById('freeStorage').textContent = free + ' GB';      const usedPct = cleared ? 5 : Math.floor(Math.random() * 30 + 45);     document.getElementById('progressPercent').textContent = usedPct + '% Terpakai';     setTimeout(() => {       document.getElementById('progressFill').style.width = usedPct + '%';     }, 300);   }    function refreshScan() {     // Reset all     cacheTypes.forEach(type => {       document.getElementById('size-' + type).textContent = 'Menganalisa...';       document.getElementById('status-' + type).textContent = '⏳';       const item = document.querySelector(`.cache-item[data-id="${type}"]`);       if (item) item.classList.remove('cleaned');     });     document.getElementById('resultBox').style.display = 'none';     document.getElementById('btnClean').disabled = false;     document.getElementById('progressFill').style.width = '0%';     document.getElementById('progressPercent').textContent = 'Menganalisa...';     document.getElementById('totalStorage').textContent = '--';     document.getElementById('cacheStorage').textContent = '--';     document.getElementById('freeStorage').textContent = '--';      generateRandomSizes();     setTimeout(() => { displaySizes(); updateStorageInfo(false); }, 900);     showToast('🔍 Scan ulang berhasil!');   }    // =============================================   //  CLEANING PROCESS   // =============================================   const cleanMessages = [     'Menginisialisasi pembersihan...',     'Memindai cache aplikasi...',     'Membersihkan cache browser...',     'Menghapus file sementara...',     'Membersihkan thumbnail cache...',     'Membersihkan cache sistem...',     'Menghapus residual files...',     'Mengoptimalkan memori...',     'Memverifikasi pembersihan...',     '✅ Pembersihan selesai!'   ];    async function startCleaning() {     const btn = document.getElementById('btnClean');     btn.disabled = true;      // Clear actual browser caches     try {       localStorage.removeItem('temp_data');       sessionStorage.clear();       if ('caches' in window) {         const keys = await caches.keys();         await Promise.all(keys.map(k => caches.delete(k)));       }     } catch(e) {}      showOverlay();      const total = 100;     let progress = 0;     let msgIdx = 0;      const interval = setInterval(() => {       progress += Math.floor(Math.random() * 6 + 2);       if (progress >= 100) progress = 100;        document.getElementById('percentText').textContent = progress + '%';       document.getElementById('cleanProgressFill').style.width = progress + '%';        const msgStep = Math.floor(progress / 11);       if (msgStep !== msgIdx && msgStep < cleanMessages.length) {         msgIdx = msgStep;         document.getElementById('cleanProgressText').textContent = cleanMessages[msgIdx];       }        // Clean items progressively       const itemIdx = Math.floor(progress / 17);       for (let i = 0; i <= itemIdx && i < cacheTypes.length; i++) {         const item = document.querySelector(`.cache-item[data-id="${cacheTypes[i]}"]`);         if (item && !item.classList.contains('cleaned')) {           item.classList.add('cleaned');           document.getElementById('status-' + cacheTypes[i]).textContent = '✅';           document.getElementById('size-' + cacheTypes[i]).textContent = '0 MB';         }       }        if (progress >= 100) {         clearInterval(interval);         setTimeout(() => {           hideOverlay();           showResult();           updateStorageInfo(true);         }, 700);       }     }, 120);   }    function showResult() {     const box = document.getElementById('resultBox');     box.style.display = 'block';     document.getElementById('freedText').textContent = `+${totalCacheSize.toFixed(0)} MB Dibebaskan`;     box.scrollIntoView({ behavior: 'smooth', block: 'center' });     showToast('🎉 Cache berhasil dibersihkan 100%!');   }    function showOverlay() {     document.getElementById('overlay').classList.add('active');     document.getElementById('percentText').textContent = '0%';     document.getElementById('cleanProgressFill').style.width = '0%';     document.getElementById('cleanProgressText').textContent = 'Memulai pembersihan...';   }    function hideOverlay() {     document.getElementById('overlay').classList.remove('active');   }    // =============================================   //  TOAST   // ============================================   function showToast(msg) {     const t = document.getElementById('toast');     t.textContent = msg;     t.classList.add('show');     setTimeout(() => t.classList.remove('show'), 2800);   }    // =============================================   //  INIT   // =============================================   window.addEventListener('load', () => {     generateRandomSizes();     setTimeout(() => { displaySizes(); updateStorageInfo(false); }, 600);   }); </script> </body> </html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Cache Cleaner Pro</title>
+  <style>
+    /* ===== GOOGLE FONTS ===== */
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap');
+
+    /* ===== ROOT VARIABLES ===== */
+    :root {
+      --gold-light:    #FFD700;
+      --gold-main:     #C9A84C;
+      --gold-deep:     #A67C00;
+      --gold-shine:    #FFF4A3;
+      --green-dark:    #0B3D2E;
+      --green-mid:     #145A3C;
+      --green-deep:    #0A2E1F;
+      --green-accent:  #1A7A50;
+      --green-glow:    #27AE60;
+      --bg-main:       #071C12;
+      --text-light:    #F5E6C8;
+      --shadow-gold:   0 0 18px rgba(201,168,76,0.55);
+      --shadow-green:  0 0 18px rgba(39,174,96,0.35);
+    }
+
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--bg-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ===== ANIMATED BACKGROUND ===== */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(201,168,76,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(20,90,60,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 50%, rgba(11,61,46,0.30) 0%, transparent 80%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Particle Stars */
+    .stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--gold-light);
+      opacity: 0;
+      animation: twinkle var(--dur) var(--delay) infinite ease-in-out;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: scale(0.5); }
+      50%       { opacity: 0.7; transform: scale(1.2); }
+    }
+
+    /* ===== WRAPPER ===== */
+    .wrapper {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 0 32px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      width: 100%;
+      background: linear-gradient(180deg, #0A2E1F 0%, #0D3D28 60%, #0B3D2E 100%);
+      border-bottom: 2.5px solid var(--gold-main);
+      box-shadow: 0 4px 32px rgba(201,168,76,0.18), 0 2px 8px rgba(0,0,0,0.7);
+      padding: 22px 18px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold-shine), var(--gold-light), var(--gold-main), transparent);
+      animation: shimmer-line 3s linear infinite;
+    }
+    @keyframes shimmer-line {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* Corner Ornament */
+    header::after {
+      content: '✦';
+      position: absolute;
+      bottom: 10px; right: 16px;
+      color: var(--gold-deep);
+      font-size: 18px;
+      opacity: 0.5;
+    }
+
+    .app-icon-wrap {
+      position: relative;
+      margin-bottom: 8px;
+    }
+    .app-icon {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #1A7A50, #0A2E1F);
+      border: 3px solid var(--gold-main);
+      box-shadow: var(--shadow-gold), inset 0 0 18px rgba(201,168,76,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      animation: pulse-icon 3s ease-in-out infinite;
+      position: relative;
+    }
+    @keyframes pulse-icon {
+      0%, 100% { box-shadow: var(--shadow-gold), inset 0 0 18px rgba(201,168,76,0.12); }
+      50%       { box-shadow: 0 0 32px rgba(201,168,76,0.75), inset 0 0 24px rgba(201,168,76,0.20); }
+    }
+
+    /* Rotating ring around icon */
+    .ring {
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 2px dashed rgba(201,168,76,0.35);
+      animation: spin-ring 10s linear infinite;
+    }
+    @keyframes spin-ring {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .app-title {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--gold-light);
+      text-shadow: 0 0 12px rgba(255,215,0,0.7), 0 2px 4px rgba(0,0,0,0.8);
+      letter-spacing: 1.5px;
+      text-align: center;
+      line-height: 1.25;
+    }
+    .app-subtitle {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10px;
+      color: var(--gold-deep);
+      letter-spacing: 3px;
+      margin-top: 3px;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    /* ===== DEVELOPER BADGE ===== */
+    .dev-badge {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 10px;
+      background: rgba(201,168,76,0.07);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 20px;
+      padding: 5px 14px 5px 10px;
+    }
+    .blink-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--green-glow);
+      box-shadow: 0 0 6px var(--green-glow);
+      flex-shrink: 0;
+      animation: blink-dot 1.2s ease-in-out infinite;
+    }
+    @keyframes blink-dot {
+      0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--green-glow), 0 0 12px var(--green-glow); }
+      50%       { opacity: 0.1; box-shadow: none; }
+    }
+    .dev-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10px;
+      color: var(--gold-main);
+      letter-spacing: 1.5px;
+      font-weight: 700;
+    }
+    .dev-text span {
+      color: var(--gold-light);
+    }
+
+    /* ===== VISITOR COUNTER ===== */
+    .visitor-bar {
+      width: calc(100% - 32px);
+      margin: 16px auto 0;
+      background: linear-gradient(135deg, rgba(11,61,46,0.8), rgba(10,46,31,0.95));
+      border: 1px solid rgba(201,168,76,0.30);
+      border-radius: 12px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-green);
+    }
+    .visitor-label {
+      font-size: 12px;
+      color: var(--gold-main);
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+    .visitor-count {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--gold-light);
+      text-shadow: 0 0 10px rgba(255,215,0,0.6);
+      letter-spacing: 2px;
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    main {
+      width: calc(100% - 32px);
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ===== STORAGE GAUGE CARD ===== */
+    .card {
+      background: linear-gradient(145deg, rgba(20,90,60,0.45), rgba(11,61,46,0.70));
+      border: 1.5px solid rgba(201,168,76,0.30);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4), var(--shadow-green);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(ellipse at center, rgba(201,168,76,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .card-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: var(--gold-main);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title::before {
+      content: '';
+      display: inline-block;
+      width: 18px; height: 2px;
+      background: var(--gold-main);
+    }
+
+    /* Storage Info Grid */
+    .storage-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .storage-item {
+      background: rgba(10,46,31,0.6);
+      border: 1px solid rgba(201,168,76,0.18);
+      border-radius: 12px;
+      padding: 12px 8px;
+      text-align: center;
+    }
+    .storage-emoji { font-size: 22px; margin-bottom: 4px; }
+    .storage-val {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+    .storage-lbl {
+      font-size: 9px;
+      color: var(--gold-deep);
+      letter-spacing: 1px;
+      margin-top: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Progress Bar */
+    .progress-wrap { margin-top: 4px; }
+    .progress-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--gold-main);
+      margin-bottom: 6px;
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 10px;
+      background: rgba(10,46,31,0.8);
+      border-radius: 10px;
+      border: 1px solid rgba(201,168,76,0.15);
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--green-accent), var(--gold-deep), var(--gold-main));
+      box-shadow: 0 0 8px rgba(201,168,76,0.4);
+      transition: width 1.5s cubic-bezier(0.4,0,0.2,1);
+      width: 0%;
+    }
+
+    /* ===== CACHE LIST CARD ===== */
+    .cache-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .cache-item {
+      background: rgba(10,46,31,0.55);
+      border: 1px solid rgba(201,168,76,0.18);
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.4s ease;
+    }
+    .cache-item.cleaned {
+      border-color: var(--green-glow);
+      background: rgba(39,174,96,0.08);
+    }
+    .cache-item-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      background: rgba(11,61,46,0.8);
+      border: 1px solid rgba(201,168,76,0.20);
+      flex-shrink: 0;
+    }
+    .cache-item-info { flex: 1; }
+    .cache-item-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 2px;
+    }
+    .cache-item-size {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10px;
+      color: var(--gold-main);
+    }
+    .cache-item-status {
+      font-size: 18px;
+      min-width: 24px;
+      text-align: center;
+      transition: all 0.4s ease;
+    }
+
+    /* ===== CLEAN BUTTON ===== */
+    .btn-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .btn-clean {
+      width: 100%;
+      padding: 18px 24px;
+      border: none;
+      border-radius: 18px;
+      cursor: pointer;
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--green-deep);
+      background: linear-gradient(135deg, var(--gold-shine) 0%, var(--gold-light) 30%, var(--gold-main) 70%, var(--gold-deep) 100%);
+      box-shadow: 0 6px 28px rgba(201,168,76,0.50), 0 2px 8px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-clean::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+      animation: btn-shimmer 2.5s linear infinite;
+    }
+    @keyframes btn-shimmer {
+      0%   { left: -100%; }
+      100% { left: 200%; }
+    }
+    .btn-clean:active {
+      transform: scale(0.97);
+      box-shadow: 0 3px 14px rgba(201,168,76,0.40);
+    }
+    .btn-clean:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .btn-clean .btn-icon { margin-right: 8px; font-size: 18px; }
+
+    .btn-refresh {
+      background: transparent;
+      border: 1.5px solid rgba(201,168,76,0.40);
+      border-radius: 12px;
+      padding: 10px 24px;
+      color: var(--gold-main);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-refresh:active {
+      background: rgba(201,168,76,0.10);
+    }
+
+    /* ===== RESULT BOX ===== */
+    .result-box {
+      display: none;
+      background: linear-gradient(135deg, rgba(39,174,96,0.12), rgba(11,61,46,0.60));
+      border: 2px solid var(--green-glow);
+      border-radius: 18px;
+      padding: 22px;
+      text-align: center;
+      box-shadow: var(--shadow-green), 0 0 32px rgba(39,174,96,0.18);
+      animation: pop-in 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+    }
+    @keyframes pop-in {
+      0%   { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .result-checkmark {
+      font-size: 48px;
+      animation: bounce-check 0.6s 0.3s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    }
+    @keyframes bounce-check {
+      0%   { transform: scale(0); }
+      100% { transform: scale(1); }
+    }
+    .result-title {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 15px;
+      color: var(--gold-light);
+      text-shadow: 0 0 10px rgba(255,215,0,0.5);
+      margin: 8px 0 4px;
+    }
+    .result-desc {
+      font-size: 13px;
+      color: var(--green-glow);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .result-freed {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--gold-light);
+      text-shadow: 0 0 14px rgba(255,215,0,0.7);
+      margin-top: 10px;
+    }
+
+    /* ===== PROGRESS MODAL ===== */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(7,28,18,0.92);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .overlay.active { display: flex; }
+
+    .clean-spinner {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      border: 4px solid rgba(201,168,76,0.15);
+      border-top: 4px solid var(--gold-light);
+      border-right: 4px solid var(--gold-main);
+      animation: spin 0.9s linear infinite;
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .clean-spinner::before {
+      content: '🧹';
+      font-size: 36px;
+      animation: counter-spin 0.9s linear infinite;
+    }
+    @keyframes spin         { from { transform: rotate(0deg); }   to { transform: rotate(360deg); }  }
+    @keyframes counter-spin { from { transform: rotate(0deg); }   to { transform: rotate(-360deg); } }
+
+    .clean-progress-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      color: var(--gold-light);
+      text-align: center;
+      min-height: 20px;
+    }
+    .clean-percent {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--gold-light);
+      text-shadow: 0 0 20px rgba(255,215,0,0.7);
+    }
+    .clean-progress-bar-bg {
+      width: 220px;
+      height: 8px;
+      background: rgba(201,168,76,0.15);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .clean-progress-bar-fill {
+      height: 100%;
+      border-radius: 8px;
+      background: linear-gradient(90deg, var(--green-accent), var(--gold-light));
+      box-shadow: 0 0 10px rgba(255,215,0,0.5);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* ===== TIPS CARD ===== */
+    .tips-card {
+      background: linear-gradient(135deg, rgba(166,124,0,0.08), rgba(11,61,46,0.50));
+      border: 1px solid rgba(201,168,76,0.20);
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+    .tips-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--gold-main);
+      margin-bottom: 8px;
+    }
+    .tip-row {
+      display: flex; align-items: flex-start;
+      gap: 8px; margin-bottom: 6px;
+      font-size: 12px; color: rgba(245,230,200,0.75);
+      line-height: 1.4;
+    }
+    .tip-row:last-child { margin-bottom: 0; }
+
+    /* ===== FOOTER ===== */
+    footer {
+      width: 100%;
+      margin-top: 24px;
+      padding: 16px;
+      background: linear-gradient(180deg, transparent, rgba(10,46,31,0.6));
+      border-top: 1px solid rgba(201,168,76,0.18);
+      text-align: center;
+    }
+    .footer-divider {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 10px;
+    }
+    .footer-divider::before,
+    .footer-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.30), transparent);
+    }
+    .footer-ornament { color: var(--gold-deep); font-size: 14px; opacity: 0.7; }
+
+    .footer-text {
+      font-size: 11px;
+      color: var(--gold-deep);
+      letter-spacing: 1px;
+      line-height: 1.6;
+    }
+    .footer-text span {
+      color: var(--gold-main);
+      font-weight: 700;
+    }
+    .heart {
+      color: #E74C3C;
+      animation: heartbeat 1.4s ease-in-out infinite;
+      display: inline-block;
+    }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      14%       { transform: scale(1.3); }
+      28%       { transform: scale(1); }
+      42%       { transform: scale(1.2); }
+      56%       { transform: scale(1); }
+    }
+
+    /* ===== TOAST NOTIFICATION ===== */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%; transform: translateX(-50%) translateY(80px);
+      background: linear-gradient(135deg, var(--green-mid), var(--green-dark));
+      border: 1.5px solid var(--gold-main);
+      border-radius: 14px;
+      padding: 12px 22px;
+      font-size: 13px;
+      color: var(--gold-light);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      box-shadow: var(--shadow-gold);
+      z-index: 9999;
+      transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275), opacity 0.4s;
+      opacity: 0;
+      white-space: nowrap;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 360px) {
+      .app-title { font-size: 16px; }
+      .storage-grid { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+      .btn-clean { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Particle Stars -->
+  <div class="stars" id="starsContainer"></div>
+
+  <!-- Clean Overlay / Loading Modal -->
+  <div class="overlay" id="overlay">
+    <div class="clean-percent" id="percentText">0%</div>
+    <div class="clean-spinner"></div>
+    <div class="clean-progress-bar-bg">
+      <div class="clean-progress-bar-fill" id="cleanProgressFill"></div>
+    </div>
+    <div class="clean-progress-text" id="cleanProgressText">Memulai pembersihan...</div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <div class="wrapper">
+    <!-- ===== HEADER ===== -->
+    <header>
+      <div class="app-icon-wrap">
+        <div class="app-icon">🛡️<div class="ring"></div></div>
+      </div>
+      <div class="app-title">Cache Cleaner Pro</div>
+      <div class="app-subtitle">✦ Ultimate Memory Booster ✦</div>
+
+      <!-- Developer Badge -->
+      <div class="dev-badge">
+        <div class="blink-dot"></div>
+        <div class="dev-text">Developer : <span>Fatur 62</span></div>
+      </div>
+    </header>
+
+    <!-- ===== VISITOR COUNTER ===== -->
+    <div class="visitor-bar">
+      <div class="visitor-label">👥 Total Pengunjung</div>
+      <div class="visitor-count" id="visitorCount">000000</div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main>
+      <!-- Storage Card -->
+      <div class="card">
+        <div class="card-title">📊 Status Memori</div>
+        <div class="storage-grid">
+          <div class="storage-item">
+            <div class="storage-emoji">💾</div>
+            <div class="storage-val" id="totalStorage">--</div>
+            <div class="storage-lbl">Total RAM</div>
+          </div>
+          <div class="storage-item">
+            <div class="storage-emoji">🗑️</div>
+            <div class="storage-val" id="cacheStorage">--</div>
+            <div class="storage-lbl">Cache</div>
+          </div>
+          <div class="storage-item">
+            <div class="storage-emoji">✅</div>
+            <div class="storage-val" id="freeStorage">--</div>
+            <div class="storage-lbl">Bebas</div>
+          </div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label-row">
+            <span>Penggunaan RAM</span>
+            <span id="progressPercent">Menganalisa...</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cache Items Card -->
+      <div class="card">
+        <div class="card-title">🗂️ Jenis Cache Terdeteksi</div>
+        <div class="cache-list" id="cacheList">
+          <div class="cache-item" data-id="app">
+            <div class="cache-item-icon">📱</div>
+            <div class="cache-item-info">
+              <div class="cache-item-name">Cache Aplikasi</div>
+              <div class="cache-item-size" id="size-app">Menganalisa...</div>
+            </div>
+            <div class="cache-item-status" id="status-app">⏳</div>
+          </div>
+          <div class="cache-item" data-id="browser">
+            <div class="cache-item-icon">🌐</div>
+            <div class="cache-item-info">
+              <div class="cache-item-name">Cache Browser</div>
+              <div class="cache-item-size" id="size-browser">Menganalisa...</div>
+            </div>
+            <div class="cache-item-status" id="status-browser">⏳</div>
+          </div>
+          <div class="cache-item" data-id="temp">
+            <div class="cache-item-icon">📂</div>
+            <div class="cache-item-info">
+              <div class="cache-item-name">File Sementara</div>
+              <div class="cache-item-size" id="size-temp">Menganalisa...</div>
+            </div>
+            <div class="cache-item-status" id="status-temp">⏳</div>
+          </div>
+          <div class="cache-item" data-id="thumbnail">
+            <div class="cache-item-icon">🖼️</div>
+            <div class="cache-item-info">
+              <div class="cache-item-name">Thumbnail Cache</div>
+              <div class="cache-item-size" id="size-thumbnail">Menganalisa...</div>
+            </div>
+            <div class="cache-item-status" id="status-thumbnail">⏳</div>
+          </div>
+          <div class="cache-item" data-id="system">
+            <div class="cache-item-icon">⚙️</div>
+            <div class="cache-item-info">
+              <div class="cache-item-name">Cache Sistem</div>
+              <div class="cache-item-size" id="size-system">Menganalisa...</div>
+            </div>
+            <div class="cache-item-status" id="status-system">⏳</div>
+          </div>
+          <div class="cache-item" data-id="residual">
+            <div class="cache-item-icon">🔋</div>
+            <div class="cache-item-info">
+              <div class="cache-item-name">Residual Files</div>
+              <div class="cache-item-size" id="size-residual">Menganalisa...</div>
+            </div>
+            <div class="cache-item-status" id="status-residual">⏳</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="btn-wrap">
+        <button class="btn-clean" id="btnClean" onclick="startCleaning()">
+          <span class="btn-icon">🚀</span> BERSIHKAN SEKARANG
+        </button>
+        <button class="btn-refresh" onclick="refreshScan()">🔄 Scan Ulang</button>
+      </div>
+
+      <!-- Result Box -->
+      <div class="result-box" id="resultBox">
+        <div class="result-checkmark">✅</div>
+        <div class="result-title">Pembersihan Selesai!</div>
+        <div class="result-desc">Memori berhasil dibersihkan 100%</div>
+        <div class="result-freed" id="freedText">+0 MB Dibebaskan</div>
+      </div>
+
+      <!-- Tips Card -->
+      <div class="tips-card">
+        <div class="tips-title">💡 TIPS PERAWATAN</div>
+        <div class="tip-row">✦ Bersihkan cache secara rutin setiap 3-7 hari sekali untuk performa optimal.</div>
+        <div class="tip-row">✦ Cache yang menumpuk dapat memperlambat performa hingga 40%.</div>
+        <div class="tip-row">✦ Setelah membersihkan cache, restart perangkat untuk hasil terbaik.</div>
+      </div>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+      <div class="footer-divider">
+        <span class="footer-ornament">✦</span>
+      </div>
+      <div class="footer-text">
+        Aplikasi ini dibuat dengan <span class="heart">❤</span> by <span>Fatur62</span>
+      </div>
+      <div class="footer-text" style="margin-top:4px; font-size:9px; opacity:0.5;">
+        © 2024 Cache Cleaner Pro — All Rights Reserved
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // =============================================
+    //  STARS GENERATOR
+    // =============================================
+    (function generateStars() {
+      const container = document.getElementById('starsContainer');
+      if (!container) return;
+      for (let i = 0; i < 55; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        const size = Math.random() * 2.5 + 0.8;
+        s.style.cssText = `
+          width:${size}px; height:${size}px;
+          top:${Math.random()*100}%;
+          left:${Math.random()*100}%;
+          --dur:${(Math.random()*3+2).toFixed(1)}s;
+          --delay:${(Math.random()*5).toFixed(1)}s;
+        `;
+        container.appendChild(s);
+      }
+    })();
+
+    // =============================================
+    //  VISITOR COUNTER
+    // =============================================
+    (function initVisitor() {
+      let count = parseInt(localStorage.getItem('fc62_visitors') || '0', 10);
+      count++;
+      try {
+        localStorage.setItem('fc62_visitors', count.toString());
+      } catch (e) {
+        console.warn('LocalStorage tidak dapat diakses:', e);
+      }
+      const el = document.getElementById('visitorCount');
+      if (el) animateCounter(el, count);
+    })();
+
+    function animateCounter(el, target) {
+      const start = Math.max(0, target - Math.floor(Math.random() * 8 + 3));
+      let current = start;
+      const step = () => {
+        if (current < target) {
+          current++;
+          el.textContent = String(current).padStart(6, '0');
+          setTimeout(step, 60);
+        } else {
+          el.textContent = String(target).padStart(6, '0');
+        }
+      };
+      step();
+    }
+
+    // =============================================
+    //  CACHE SIZE DATA (Simulated)
+    // =============================================
+    const cacheTypes = ['app', 'browser', 'temp', 'thumbnail', 'system', 'residual'];
+    let cacheSizes = {};
+    let totalCacheSize = 0;
+
+    function generateRandomSizes() {
+      totalCacheSize = 0;
+      cacheSizes = {};
+      cacheTypes.forEach(type => {
+        const mb = parseFloat((Math.random() * 180 + 20).toFixed(1));
+        cacheSizes[type] = mb;
+        totalCacheSize += mb;
+      });
+      totalCacheSize = parseFloat(totalCacheSize.toFixed(1));
+    }
+
+    function displaySizes() {
+      cacheTypes.forEach(type => {
+        const el = document.getElementById('size-' + type);
+        if (el) el.textContent = cacheSizes[type] + ' MB';
+      });
+    }
+
+    // =============================================
+    //  UI HELPER FUNCTIONS
+    // =============================================
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    function showOverlay() {
+      const overlay = document.getElementById('overlay');
+      if (overlay) overlay.classList.add('active');
+    }
+
+    function hideOverlay() {
+      const overlay = document.getElementById('overlay');
+      if (overlay) overlay.classList.remove('active');
+    }
+
+    // =============================================
+    //  STORAGE INFO
+    // =============================================
+    function updateStorageInfo(cleared) {
+      const total = (Math.random() * 2 + 2).toFixed(1);
+      const cacheGB = cleared ? 0 : parseFloat((totalCacheSize / 1024).toFixed(2));
+      const free = cleared
+        ? parseFloat(total).toFixed(1)
+        : parseFloat((total - cacheGB).toFixed(1));
+
+      const totalEl = document.getElementById('totalStorage');
+      const cacheEl = document.getElementById('cacheStorage');
+      const freeEl = document.getElementById('freeStorage');
+      const progressPctEl = document.getElementById('progressPercent');
+      const progressFillEl = document.getElementById('progressFill');
+
+      if (totalEl) totalEl.textContent = total + ' GB';
+      if (cacheEl) cacheEl.textContent = cleared ? '0 MB' : totalCacheSize.toFixed(0) + ' MB';
+      if (freeEl) freeEl.textContent = free + ' GB';
+
+      const usedPct = cleared ? 5 : Math.floor(Math.random() * 30 + 45);
+      if (progressPctEl) progressPctEl.textContent = usedPct + '% Terpakai';
+      
+      setTimeout(() => {
+        if (progressFillEl) progressFillEl.style.width = usedPct + '%';
+      }, 300);
+    }
+
+    function refreshScan() {
+      cacheTypes.forEach(type => {
+        const sizeEl = document.getElementById('size-' + type);
+        const statusEl = document.getElementById('status-' + type);
+        const item = document.querySelector(`.cache-item[data-id="${type}"]`);
+
+        if (sizeEl) sizeEl.textContent = 'Menganalisa...';
+        if (statusEl) statusEl.textContent = '⏳';
+        if (item) item.classList.remove('cleaned');
+      });
+
+      const resultBox = document.getElementById('resultBox');
+      const btnClean = document.getElementById('btnClean');
+      const progressFill = document.getElementById('progressFill');
+      const progressPercent = document.getElementById('progressPercent');
+
+      if (resultBox) resultBox.style.display = 'none';
+      if (btnClean) btnClean.disabled = false;
+      if (progressFill) progressFill.style.width = '0%';
+      if (progressPercent) progressPercent.textContent = 'Menganalisa...';
+
+      const totalEl = document.getElementById('totalStorage');
+      const cacheEl = document.getElementById('cacheStorage');
+      const freeEl = document.getElementById('freeStorage');
+
+      if (totalEl) totalEl.textContent = '--';
+      if (cacheEl) cacheEl.textContent = '--';
+      if (freeEl) freeEl.textContent = '--';
+
+      generateRandomSizes();
+      setTimeout(() => { 
+        displaySizes(); 
+        updateStorageInfo(false); 
+      }, 900);
+
+      showToast('🔍 Scan ulang berhasil!');
+    }
+
+    // =============================================
+    //  CLEANING PROCESS
+    // =============================================
+    const cleanMessages = [
+      'Menginisialisasi pembersihan...',
+      'Memindai cache aplikasi...',
+      'Membersihkan cache browser...',
+      'Menghapus file sementara...',
+      'Membersihkan thumbnail cache...',
+      'Membersihkan cache sistem...',
+      'Menghapus residual files...',
+      'Mengoptimalkan memori...',
+      'Memverifikasi pembersihan...',
+      '✅ Pembersihan selesai!'
+    ];
+
+    async function startCleaning() {
+      const btn = document.getElementById('btnClean');
+      if (btn) btn.disabled = true;
+
+      // Clear actual browser storage safely
+      try {
+        localStorage.removeItem('temp_data');
+        sessionStorage.clear();
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+      } catch (e) {
+        console.warn('Gagal menghapus beberapa cache browser:', e);
+      }
+
+      showOverlay();
+
+      let progress = 0;
+      let msgIdx = 0;
+
+      const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 6 + 2);
+        if (progress >= 100) progress = 100;
+
+        const percentText = document.getElementById('percentText');
+        const cleanProgressFill = document.getElementById('cleanProgressFill');
+        const cleanProgressText = document.getElementById('cleanProgressText');
+
+        if (percentText) percentText.textContent = progress + '%';
+        if (cleanProgressFill) cleanProgressFill.style.width = progress + '%';
+
+        const msgStep = Math.floor(progress / 11);
+        if (msgStep !== msgIdx && msgStep < cleanMessages.length) {
+          msgIdx = msgStep;
+          if (cleanProgressText) cleanProgressText.textContent = cleanMessages[msgIdx];
+        }
+
+        // Clean items progressively
+        const itemIdx = Math.floor(progress / 17);
+        for (let i = 0; i <= itemIdx && i < cacheTypes.length; i++) {
+          const type = cacheTypes[i];
+          const item = document.querySelector(`.cache-item[data-id="${type}"]`);
+          const statusEl = document.getElementById('status-' + type);
+          const sizeEl = document.getElementById('size-' + type);
+
+          if (item && !item.classList.contains('cleaned')) {
+            item.classList.add('cleaned');
+            if (statusEl) statusEl.textContent = '✅';
+            if (sizeEl) sizeEl.textContent = '0 MB';
+          }
+        }
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            hideOverlay();
+            updateStorageInfo(true);
+            
+            const resultBox = document.getElementById('resultBox');
+            const freedText = document.getElementById('freedText');
+            
+            if (freedText) freedText.textContent = `+${totalCacheSize} MB Dibebaskan`;
+            if (resultBox) resultBox.style.display = 'block';
+
+            showToast('🎉 Pembersihan berhasil diselesaikan!');
+          }, 500);
+        }
+      }, 150);
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      generateRandomSizes();
+      displaySizes();
+      updateStorageInfo(false);
+    });
+  </script>
+</body>
+</html>
